@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraud Shield AI - Real-time Cybersecurity MVP</title>
+  <!-- Tailwind is not used - pure custom premium CSS is loaded from style.css -->
+  <link rel="stylesheet" href="style.css">
+  <!-- FontAwesome Icons for Futuristic UI styling -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand-section">
+          <div class="brand-logo">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div class="brand-name">
+            <h2>Fraud Shield</h2>
+            <span>Cyber Shield AI</span>
+          </div>
+        </div>
+
+        <nav class="nav-links">
+          <li class="nav-item active" data-view="dashboard">
+            <button><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+          </li>
+          <li class="nav-item" data-view="scanner">
+            <button><i class="fa-solid fa-globe"></i> URL Scanner</button>
+          </li>
+          <li class="nav-item" data-view="emulator">
+            <button><i class="fa-solid fa-mobile-screen"></i> Threat Simulator</button>
+          </li>
+        </nav>
+      </div>
+
+      <!-- SYSTEM telemetry status -->
+      <div class="system-status">
+        <div class="status-row">
+          <span>AI ENGINE</span>
+          <span class="status-value"><span class="status-dot"></span> ACTIVE</span>
+        </div>
+        <div class="status-row" style="margin-bottom: 0;">
+          <span>API NODE</span>
+          <span class="status-value mono">NODE-v1.4</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEWPORT -->
+    <main class="main-content">
+      
+      <!-- TOP CONTROL HEADER -->
+      <header class="top-header">
+        <div class="page-title">
+          <h1 id="view-title">Cyber Dashboard</h1>
+          <p id="view-subtitle">Real-time threat feeds and statistical telemetry heuristics</p>
+        </div>
+        <div class="header-actions">
+          <button class="cyber-btn" id="reset-telemetry-btn">
+            <i class="fa-solid fa-rotate-left"></i> Reset System
+          </button>
+        </div>
+      </header>
+
+      <!-- ==========================================
+           1. DASHBOARD VIEW SECTION
+           ========================================== -->
+      <section id="dashboard" class="dashboard-view active-view">
+        
+        <!-- TELEMETRY METRIC STAT CARDS -->
+        <div class="stat-grid">
+          
+          <div class="glass-panel stat-card cyan">
+            <div class="stat-info">
+              <h4>Total Scans</h4>
+              <div class="stat-number mono" id="stat-scanned">-</div>
+              <div class="stat-desc">Aggregated incoming requests</div>
+            </div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-radar"></i>
+            </div>
+          </div>
+
+          <div class="glass-panel stat-card green">
+            <div class="stat-info">
+              <h4>Threats Isolated</h4>
+              <div class="stat-number mono" id="stat-blocked">-</div>
+              <div class="stat-desc">Attacks blocked by AI shield</div>
+            </div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+          </div>
+
+          <div class="glass-panel stat-card pink">
+            <div class="stat-info">
+              <h4>Security Bypasses</h4>
+              <div class="stat-number mono" id="stat-bypassed">-</div>
+              <div class="stat-desc">Risks forced by end-user</div>
+            </div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+          </div>
+
+          <div class="glass-panel stat-card amber">
+            <div class="stat-info">
+              <h4>Global Risk Index</h4>
+              <div class="stat-number mono" id="stat-risk">-</div>
+              <div class="stat-desc">Average network threat score</div>
+            </div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-gauge-high"></i>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CHARTS SECTION (Styled like premium Recharts components) -->
+        <div class="charts-grid">
+          
+          <!-- Threat activity over time -->
+          <div class="glass-panel chart-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-wave-square"></i> Threat Activity Telemetry</h3>
+              <span class="mono" style="font-size: 0.72rem; color: var(--neon-cyan);">LIVE FEED ON</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="lineChartActivity"></canvas>
+            </div>
+          </div>
+
+          <!-- Threats breakdown by vector -->
+          <div class="glass-panel chart-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-chart-pie"></i> Vector Analysis</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="pieChartVector"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SCROLLING TELEMETRY EVENT LOGS -->
+        <div class="telemetry-grid">
+          
+          <div class="glass-panel feed-panel" style="grid-column: span 2;">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-list-check"></i> Cyber Telemetry Event Log</h3>
+              <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">AUTOMATED INCIDENT FEED</span>
+            </div>
+            <div class="scroll-feed" id="threats-feed-container">
+              <!-- Dynamically rendered threat rows -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ==========================================
+           2. URL SCANNER VIEW SECTION
+           ========================================== -->
+      <section id="scanner" class="dashboard-view">
+        
+        <div class="scanner-grid">
+          
+          <!-- SCANNER CONTROLS PANEL -->
+          <div class="glass-panel scanner-panel">
+            <div class="panel-header" style="margin-bottom: 24px;">
+              <h3><i class="fa-solid fa-shield-halved"></i> Real-time URL Threat Checker</h3>
+            </div>
+            
+            <div class="input-group">
+              <label for="url-scan-input">Enter Target Domain/URL for Threat Profile</label>
+              <div class="search-wrapper">
+                <input type="text" id="url-scan-input" placeholder="e.g. paytm-refund-verification.ru/rewards" autocomplete="off">
+                <button class="scan-submit-btn" id="run-scan-btn">
+                  <i class="fa-solid fa-shield-virus"></i> Inspect
+                </button>
+              </div>
+            </div>
+
+            <div class="preset-section">
+              <h4 style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px;">
+                Interactive Demo Scenarios
+              </h4>
+              <div class="preset-urls">
+                <button class="preset-item" data-url="http://google-rewards-verification.ru/billing">
+                  <span>http://google-rewards-verification.ru/billing</span>
+                  <span class="scam-tag">Impersonation Scam</span>
+                </button>
+                <button class="preset-item" data-url="https://paytma-secure-escrow.xyz/pay">
+                  <span>https://paytma-secure-escrow.xyz/pay</span>
+                  <span class="scam-tag">Typosquatting</span>
+                </button>
+                <button class="preset-item" data-url="http://185.220.101.4/secure-pay">
+                  <span>http://185.220.101.4/secure-pay</span>
+                  <span class="scam-tag">Raw IP Host</span>
+                </button>
+                <button class="preset-item" data-url="https://google.com">
+                  <span>https://google.com</span>
+                  <span class="safe-tag">Safe Domain</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- HEURISTIC REPORT RESULT PANEL -->
+          <div class="glass-panel scanner-panel">
+            
+            <div id="scanner-placeholder" class="result-placeholder">
+              <i class="fa-solid fa-radar"></i>
+              <p>Ready to Scan. Enter a domain or select a demo scenario to analyze cybersecurity risk telemetry.</p>
+            </div>
+
+            <div id="scanner-results" class="results-content">
+              
+              <!-- Threat Score HUD -->
+              <div class="analysis-hud" id="hud-status-wrapper">
+                <div class="analysis-title" id="hud-title-container">
+                  <h2 id="hud-verdict">-</h2>
+                  <p id="hud-meta">-</p>
+                </div>
+                <!-- Circular Risk Gauge -->
+                <div class="risk-gauge-wrapper">
+                  <svg class="gauge-circle" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="40" />
+                    <circle class="gauge-fill" id="hud-gauge-fill" cx="45" cy="45" r="40" />
+                  </svg>
+                  <div class="risk-score-text">
+                    <span class="risk-num mono" id="hud-score-num">-</span>
+                    <span class="risk-lbl">Risk</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Heuristics Checklist -->
+              <div class="indicators-section">
+                <h3>Triggered Security Heuristics</h3>
+                <div id="hud-indicators-container">
+                  <!-- Indicator row items -->
+                </div>
+              </div>
+
+              <!-- AI Summary Brief -->
+              <div class="ai-brief-box">
+                <div class="ai-header-tag">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> AI Deep Threat Intel
+                </div>
+                <div class="ai-brief-content" id="hud-ai-content">
+                  <!-- AI dynamic explanation -->
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ==========================================
+           3. THREAT PAYMENTS / EMULATOR SECTION
+           ========================================== -->
+      <section id="emulator" class="dashboard-view">
+        
+        <div class="emulator-layout">
+          
+          <!-- MOBILE SIMULATOR -->
+          <div class="phone-mockup">
+            <div class="phone-screen">
+              
+              <div class="phone-status-bar">
+                <span>09:41 AM</span>
+                <div style="display:flex; gap: 4px;">
+                  <i class="fa-solid fa-wifi"></i>
+                  <i class="fa-solid fa-battery-three-quarters"></i>
+                </div>
+              </div>
+
+              <div class="phone-browser-bar">
+                <i class="fa-solid fa-lock"></i>
+                <div class="phone-address-input unsafe" id="browser-address-bar">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <span id="browser-address-text">google-rewards-verification.ru/billing</span>
+                </div>
+                <i class="fa-solid fa-rotate-right"></i>
+              </div>
+
+              <!-- PHISHING INNER VIEW -->
+              <div class="phish-page-content" id="emulator-web-viewport">
+                
+                <!-- Web template rendered dynamically -->
+                <div class="scam-template-reward">
+                  
+                  <div class="reward-top">
+                    <div class="reward-gift-box">
+                      <i class="fa-solid fa-gift"></i>
+                    </div>
+                    <h2>Congratulations User!</h2>
+                    <p class="scam-sub">You have won a Cashback Reward from UPI Promo Desk!</p>
+                    
+                    <div class="reward-box-claim">
+                      <span>CLAIM VALUE</span>
+                      <h3>₹25,000.00</h3>
+                    </div>
+                  </div>
+
+                  <div class="reward-form">
+                    <div class="pay-form-group">
+                      <label for="claim-upi">Enter Your UPI ID to Receive Cash</label>
+                      <input type="text" id="claim-upi" value="claim-rewards99@ybl" placeholder="yourname@ybl">
+                    </div>
+                    <div class="pay-form-group">
+                      <label for="claim-merchant">Merchant Collector</label>
+                      <input type="text" id="claim-merchant" value="Verification Payout Agency" readonly style="opacity: 0.6;">
+                    </div>
+                    <div class="pay-form-group">
+                      <label for="claim-amount">Processing Authorization Fee (Refundable)</label>
+                      <input type="number" id="claim-amount" value="25000" readonly style="opacity: 0.6;">
+                    </div>
+
+                    <button class="scam-pay-btn" id="simulate-pay-btn">
+                      <i class="fa-solid fa-bolt"></i> Secure Rewards Now
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="phone-nav-bar">
+                <i class="fa-solid fa-circle"></i>
+                <i class="fa-solid fa-square"></i>
+                <i class="fa-solid fa-triangle-down"></i>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- CONTROLLER/EMULATOR PANEL -->
+          <div class="simulator-workspace">
+            <div class="glass-panel scanner-panel" style="height: 100%;">
+              <div class="panel-header" style="margin-bottom: 20px;">
+                <h3><i class="fa-solid fa-gears"></i> Threat Simulator Controls</h3>
+              </div>
+              
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5;">
+                This workspace emulates a typical mobile payment interface running inside a suspicious external webpage. You can choose different scam templates to test how **Fraud Shield AI intercepts transactions BEFORE the payment executes**.
+              </p>
+
+              <div class="sim-selectors">
+                
+                <button class="sim-btn active-sim" data-scam="reward">
+                  <i class="fa-solid fa-gift" style="color: #fbbf24;"></i>
+                  <div class="sim-btn-info">
+                    <h4>Scenario A: Google Pay Payout Refund</h4>
+                    <p>Scammer claims you won Rs 25,000 reward but triggers a push payment fee to a burner UPI address.</p>
+                  </div>
+                </button>
+
+                <button class="sim-btn" data-scam="billing">
+                  <i class="fa-solid fa-triangle-exclamation" style="color: var(--neon-pink);"></i>
+                  <div class="sim-btn-info">
+                    <h4>Scenario B: Urgent Wallet Lock Alert</h4>
+                    <p>Typosquatting web portal warning that your account is locked. Demands Rs 75,000 security deposit.</p>
+                  </div>
+                </button>
+
+                <button class="sim-btn" data-scam="legit">
+                  <i class="fa-solid fa-circle-check" style="color: var(--neon-green);"></i>
+                  <div class="sim-btn-info">
+                    <h4>Scenario C: Official Checkout (Legitimate)</h4>
+                    <p>Safe verified HTTPS portal. Normal payment to registered seller with zero threat risk.</p>
+                  </div>
+                </button>
+
+              </div>
+
+              <div class="glass-panel" style="padding: 16px; border-color: rgba(0, 240, 255, 0.08); background: rgba(0, 240, 255, 0.01);">
+                <h4 style="font-size: 0.8rem; color: var(--neon-cyan); margin-bottom: 6px;"><i class="fa-solid fa-circle-info"></i> How to Demo:</h4>
+                <ol style="font-size: 0.75rem; color: var(--text-secondary); padding-left: 16px; line-height: 1.5;">
+                  <li>Select a scenario above (Scenario A or B are cyber threats).</li>
+                  <li>Notice the suspicious details automatically filled on the phone mockup.</li>
+                  <li>Click <strong>"Secure Rewards Now"</strong> or the action pay button on the phone screen.</li>
+                  <li>Watch **Fraud Shield AI** intercept the payment workflow in real time with our warn-before-payment HUD overlay!</li>
+                </ol>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================
+       REAL-TIME CYBER SECURITY INTERCEPTION OVERLAY HUD
+       ======================================================== -->
+  <div class="interceptor-overlay" id="threat-interceptor-overlay">
+    
+    <div class="interceptor-hud">
+      <!-- Flashing laser threat scan bar -->
+      <div class="laser-scanner"></div>
+
+      <!-- Warning Header Banner -->
+      <div class="interceptor-banner">
+        <div class="interceptor-icon-box">
+          <i class="fa-solid fa-shield-virus"></i>
+        </div>
+        <div class="interceptor-heading">
+          <h2>AI Intercept: Payment Blocked</h2>
+          <p>FRAUD SHIELD AI HAS HALTED AN UNAUTHORIZED TRANSACTION OUTFLOW</p>
+        </div>
+        <div class="interceptor-meta">
+          <div>INCIDENT ID: <span class="mono" id="intercept-id">TH-9281</span></div>
+          <div>PROTOCOL: <span class="mono" style="color: var(--neon-pink);">SHIELD-ACTIVE</span></div>
+        </div>
+      </div>
+
+      <!-- Interception Telemetry Splitter -->
+      <div class="interceptor-body">
+        
+        <!-- Left details panel -->
+        <div class="interceptor-body-left">
+          
+          <div class="threat-details-panel">
+            <h3>Transaction Threat Profile</h3>
+            <div class="threat-meta-row">
+              <span>Origin Portal:</span>
+              <span id="intercept-origin">http://google-rewards-claims.ru</span>
+            </div>
+            <div class="threat-meta-row">
+              <span>Merchant Claimed:</span>
+              <span id="intercept-merchant">Payout Verification Team</span>
+            </div>
+            <div class="threat-meta-row">
+              <span>Payment Handle:</span>
+              <span id="intercept-upi">claim-rewards99@ybl</span>
+            </div>
+            <div class="threat-meta-row">
+              <span>Checkout Amount:</span>
+              <span id="intercept-amount" style="color: #fff; font-weight: bold;">₹25,000.00</span>
+            </div>
+            <div class="threat-meta-row" style="border: none;">
+              <span>Threat Score:</span>
+              <span class="intercept-risk-badge mono" id="intercept-score">95/100</span>
+            </div>
+          </div>
+
+          <div class="indicators-section" style="margin-bottom: 0;">
+            <h3 style="font-size: 0.72rem; color: var(--text-secondary); text-transform: uppercase;">Triggered Heuristics</h3>
+            <div class="intercept-indicators-list" id="intercept-indicators-box">
+              <!-- Indicators dynamically loaded -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right AI report panel -->
+        <div class="interceptor-body-right">
+          <div class="interceptor-ai-box">
+            <div class="ai-header-tag">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Threat Intelligence Analysis
+            </div>
+            <div class="ai-brief-content scroll-feed" id="intercept-ai-report" style="flex-grow: 1; max-height: 280px; overflow-y: auto; padding-right: 4px;">
+              <!-- Grok explanation of transaction threat -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- User Choice Buttons -->
+      <div class="interceptor-actions">
+        <div class="action-msg">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Funds are secure. Choose Abort to cancel transaction and patch portal.</span>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn bypass" id="intercept-bypass-btn">Bypass Warning</button>
+          <button class="action-btn abort" id="intercept-abort-btn">Abort & Secure</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- CYBER TELEMETRY TOAST MESSAGE -->
+  <div class="cyber-toast" id="system-toast">
+    <i class="fa-solid fa-shield-halved"></i>
+    <span id="toast-text">Heuristics Engine Active. No threats.</span>
+  </div>
+
+  <!-- ChartJS CDN for rendering stats charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Main application script file -->
+  <script src="app.js"></script>
+</body>
+</html>

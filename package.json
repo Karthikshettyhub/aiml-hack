@@ -1,0 +1,27 @@
+{
+  "name": "fraud-shield-ai",
+  "version": "1.0.0",
+  "description": "Fraud Shield AI - Real-time Cybersecurity MVP for Phishing and Transaction Fraud Prevention",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Karthikshettyhub/aiml-hack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Karthikshettyhub/aiml-hack/issues"
+  },
+  "homepage": "https://github.com/Karthikshettyhub/aiml-hack#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
